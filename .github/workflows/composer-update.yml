@@ -1,0 +1,30 @@
+name: composer update
+on: ["push"]
+jobs:
+  composer-update:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          tools: none
+      - name: composer update
+        id: composer-update
+        run: composer update
+      - name: Create Pull Request
+        if: steps.composer-update.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --exit-code; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "composer-update/$(date +'%Y%m%d')"
+          git commit -am "composer update $(date +'%Y%m%d')"
+          git push
+          gh pr create -B "main" -t "composer update" -b ""
