@@ -8,8 +8,8 @@ image: .cache/dev
 	@docker build -t ${IMAGE_NAME} .
 	@touch ${@}
 
-.PHONY: lint
-lint: image
+.PHONY: composer-run-%
+composer-run-%: image
 	@docker run --rm --tty \
 		-v $(PWD)/src:$(IMAGE_WORKDIR)/src \
 		-v $(PWD)/tests:$(IMAGE_WORKDIR)/tests \
@@ -17,7 +17,15 @@ lint: image
 		-v $(PWD)/composer.lock:$(IMAGE_WORKDIR)/composer.lock \
 		-v $(PWD)/phpcs.xml:$(IMAGE_WORKDIR)/phpcs.xml \
 		${IMAGE_NAME} \
-		vendor/bin/phpcs
+		composer run ${@:composer-run-%=%}
+
+.PHONY: lint
+lint:
+	@-$(MAKE) composer-run-lint
+
+.PHONY: format
+format:
+	@-$(MAKE) composer-run-format
 
 .PHONY: clean
 clean:
