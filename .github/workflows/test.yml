@@ -21,6 +21,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.php-version }}
-          tools: phpcbf
+          tools: phpunit
       - name: Test
         run: phpunit
