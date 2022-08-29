@@ -12,6 +12,12 @@ IMAGE_TAG = $(PHP_VERSION)-$(COMPOSER_VERSION)
 PHP_VERSION := 8.1
 COMPOSER_VERSION := latest
 
+#
+# Environment Variables
+#
+export MSYS_NO_PATHCONV=1
+export DOCKER_BUILDKIT=1
+
 .PHONY: image
 image: $(CACHE_DIR)/$(IMAGE_TAG)
 $(CACHE_DIR)/$(IMAGE_TAG): composer.json composer.lock Dockerfile .dockerignore
