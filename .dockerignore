@@ -1,0 +1,6 @@
+/.cache/
+/.git/
+/.github/
+/Dockerfile
+/Makefile
+/README.md
