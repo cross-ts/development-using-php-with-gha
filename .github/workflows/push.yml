@@ -2,14 +2,14 @@ name: phpcs
 on: ["push"]
 jobs:
   lint:
-    uses: ./.github/workflows/push/lint.yml
+    uses: ./.github/workflows/lint.yml
     with:
       runs-on: ubuntu-20.04
       php-version: '8.1'
   format:
     needs: lint
     if: ${{ failure() }}
-    uses: ./.github/workflows/push/format.yml
+    uses: ./.github/workflows/format.yml
     with:
       runs-on: ubuntu-20.04
       php-version: '8.1'
