@@ -17,6 +17,9 @@ jobs:
     needs: lint
     if: ${{ success() }}
     uses: ./.github/workflows/test.yml
+    strategy:
+      matrix:
+        php-versions: ['7.4', '8.0', '8.1']
     with:
       runs-on: ubuntu-20.04
-      php-version: '8.1'
+      php-version: ${{ matrix.php-versions }}
