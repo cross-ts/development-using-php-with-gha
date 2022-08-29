@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: main
+          ref: develop
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -32,4 +32,4 @@ jobs:
           git checkout -b ${BRANCH_NAME}
           git commit -am "composer update $(date +'%Y%m%d')"
           git push origin ${BRANCH_NAME}
-          gh pr create -B "main" -t "composer update" -b ""
+          gh pr create -B "develop" -t "composer update" -b ""
