@@ -1,5 +1,14 @@
-name: phpcs
-on: ["push"]
+name: CI
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'composer.**'
+      - 'php**.xml'
+      - '.github/workflows/**.yml'
+      - '!.github/workflows/composer-update.yml'
+
 jobs:
   lint:
     uses: ./.github/workflows/lint.yml
