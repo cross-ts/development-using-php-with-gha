@@ -13,3 +13,10 @@ jobs:
     with:
       runs-on: ubuntu-20.04
       php-version: '8.1'
+  test:
+    needs: lint
+    if: ${{ success() }}
+    uses: ./.github/workflows/test.yml
+    with:
+      runs-on: ubuntu-20.04
+      php-version: '8.1'
