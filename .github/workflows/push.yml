@@ -2,14 +2,14 @@ name: phpcs
 on: ["push"]
 jobs:
   lint:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.0.22'
-          tools: phpcs
-      - name: Lint
-        run: phpcs
+    uses: ./.github/workflows/push/lint.yml
+    with:
+      runs-on: ubuntu-20.04
+      php-version: '8.1'
+  format:
+    needs: lint
+    if: ${{ failure() }}
+    uses: ./.github/workflows/push/format.yml
+    with:
+      runs-on: ubuntu-20.04
+      php-version: '8.1'

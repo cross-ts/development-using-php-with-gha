@@ -1,0 +1,26 @@
+name: lint
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        required: true
+        type: string
+        default: ubuntu-latest
+      php-version:
+        required: true
+        type: string
+        default: '8.0'
+
+jobs:
+  lint:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php-version }}
+          tools: phpcs
+      - name: Lint
+        run: phpcs
