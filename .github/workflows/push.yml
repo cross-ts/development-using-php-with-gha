@@ -11,5 +11,7 @@ jobs:
         with:
           php-version: '8.1'
           tools: phpcs
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
       - name: Lint
         run: phpcs
