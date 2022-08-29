@@ -16,6 +16,7 @@ composer-run-%: image
 		-v $(PWD)/composer.json:$(IMAGE_WORKDIR)/composer.json \
 		-v $(PWD)/composer.lock:$(IMAGE_WORKDIR)/composer.lock \
 		-v $(PWD)/phpcs.xml:$(IMAGE_WORKDIR)/phpcs.xml \
+		-v $(PWD)/phpunit.xml:$(IMAGE_WORKDIR)/phpunit.xml \
 		${IMAGE_NAME} \
 		composer run ${@:composer-run-%=%}
 
@@ -27,6 +28,10 @@ lint:
 format:
 	@-$(MAKE) composer-run-format
 
+.PHONY: test
+test:
+	@-$(MAKE) composer-run-test
+
 .PHONY: bash
 bash: image
 	@docker run --rm -i --tty \
@@ -35,6 +40,7 @@ bash: image
 		-v $(PWD)/composer.json:$(IMAGE_WORKDIR)/composer.json \
 		-v $(PWD)/composer.lock:$(IMAGE_WORKDIR)/composer.lock \
 		-v $(PWD)/phpcs.xml:$(IMAGE_WORKDIR)/phpcs.xml \
+		-v $(PWD)/phpunit.xml:$(IMAGE_WORKDIR)/phpunit.xml \
 		${IMAGE_NAME} \
 		bash
 
