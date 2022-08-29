@@ -29,8 +29,7 @@ jobs:
       - name: Commit
         if: ${{ steps.phpcbf.outcome == 'failure' }}
         run: |
-          git diff --exit-code
-          if [[ $? == 0 ]]; then
+          if git diff --exit-code; then
             exit 0
           fi
           git config user.name "github-actions[bot]"
