@@ -1,6 +1,8 @@
 /.cache/
 /.git/
 /.github/
+/.dockerignore
+/.gitignore
 /Dockerfile
 /Makefile
 /README.md
