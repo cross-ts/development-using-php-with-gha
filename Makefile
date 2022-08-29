@@ -1,11 +1,26 @@
-IMAGE_NAME := hoge
+#
+# Constants
+#
+IMAGE_NAME := $(shell basename $(PWD))
 IMAGE_WORKDIR := /app
+CACHE_DIR := .cache
+IMAGE_TAG = $(PHP_VERSION)-$(COMPOSER_VERSION)
+
+#
+# Variables
+#
+PHP_VERSION := 8.1
+COMPOSER_VERSION := latest
 
 .PHONY: image
-image: .cache/dev
-.cache/dev: composer.json composer.lock Dockerfile .dockerignore
-	@mkdir -p .cache
-	@docker build -t ${IMAGE_NAME} .
+image: $(CACHE_DIR)/$(IMAGE_TAG)
+$(CACHE_DIR)/$(IMAGE_TAG): composer.json composer.lock Dockerfile .dockerignore
+	@mkdir -p $(CACHE_DIR)
+	@docker build \
+		-t $(IMAGE_NAME):$(IMAGE_TAG) \
+		--build-arg PHP_VERSION=$(PHP_VERSION) \
+		--build-arg COMPOSER_VERSION=$(COMPOSER_VERSION) \
+		.
 	@touch ${@}
 
 .PHONY: composer-run-%
@@ -17,7 +32,7 @@ composer-run-%: image
 		-v $(PWD)/composer.lock:$(IMAGE_WORKDIR)/composer.lock \
 		-v $(PWD)/phpcs.xml:$(IMAGE_WORKDIR)/phpcs.xml \
 		-v $(PWD)/phpunit.xml:$(IMAGE_WORKDIR)/phpunit.xml \
-		$(IMAGE_NAME) \
+		$(IMAGE_NAME):$(IMAGE_TAG) \
 		composer run ${@:composer-run-%=%}
 
 .PHONY: lint
@@ -37,7 +52,7 @@ composer-update: image
 	@docker run --rm --tty \
 		-v $(PWD)/composer.json:$(IMAGE_WORKDIR)/composer.json \
 		-v $(PWD)/composer.lock:$(IMAGE_WORKDIR)/composer.lock \
-		$(IMAGE_NAME) \
+		$(IMAGE_NAME):$(IMAGE_TAG) \
 		composer update
 
 .PHONY: bash
@@ -49,9 +64,9 @@ bash: image
 		-v $(PWD)/composer.lock:$(IMAGE_WORKDIR)/composer.lock \
 		-v $(PWD)/phpcs.xml:$(IMAGE_WORKDIR)/phpcs.xml \
 		-v $(PWD)/phpunit.xml:$(IMAGE_WORKDIR)/phpunit.xml \
-		$(IMAGE_NAME) \
+		$(IMAGE_NAME):$(IMAGE_TAG) \
 		bash
 
 .PHONY: clean
 clean:
-	@-rm -r .cache
+	@-rm -r $(CACHE_DIR)
